@@ -1,0 +1,160 @@
+<div class="map-main">
+  <div class="map-container" >
+    <agm-map
+
+      [mapTypeId]="'roadmap'"
+      [latitude]="centerIndex == -1 ? ct_lat : points[centerIndex].latitude"
+      [longitude]="centerIndex == -1 ? ct_lng : points[centerIndex].longitude"
+      [styles]="Styles"
+      [backgroundColor]="'#fffff'"
+      [zoom]="2.3"
+    >
+        <agm-marker
+            *ngFor="let point of points; let i = index"
+            (mouseOver)="clickedMarker(point.country_code, i)"
+            (mouseOut)="current_opened_index = -1"
+            (markerClick)="handleOpenModal(i)"
+            [latitude]="point.latitude"
+            [longitude]="point.longitude"
+            [markerDraggable]="point.is_block ? true : false"
+            [label]="labelOptions[i]"
+            [iconUrl]="stringToNumber(labelOptions[i].text) >= point.minAmount ? isRepair[i] ? './assets/images/repair.png' : './assets/images/map-marker-enable.png' : './assets/images/alert.gif'"
+        >
+
+          <div style="width : 50px; height:50px; border: 1px solid red;"></div>
+          <agm-info-window
+            [isOpen]="isOpened(i)"
+          >
+            <div class="agm-info-window">
+              <div class="agm-info-header">
+                <!-- <flag [code]="point.country_code" [size]="'md'"></flag> -->
+                <!-- <div class="country-div">
+                  <p class="country-name">{{getCountryName(point.country_code)}}</p>
+                  <p class="isp">{{point.ISP}}</p>
+                </div> -->
+                <div> {{point.userName}} </div>
+
+              </div>
+              <div class="agm-info-body">
+                {{point.latitude}}, {{point.longitude}}
+              </div>
+            </div>
+          </agm-info-window>
+
+        </agm-marker>
+    </agm-map>
+
+    <div class="modal" id="tankSituation">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Tank Information</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form >
+              <div class="mb-3 mt-3">
+                <label for="name" class="form-label">Manager Name:</label>
+                <input
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  [value]=" listData[index]?.tankName || '' "
+                  disabled
+                >
+              </div>
+              <div class="mb-3 mt-3">
+                <label for="email" class="form-label">Manager Email:</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  [value]=" listData[index]?.userEmail || '' "
+                  disabled
+                >
+              </div>
+              <div class="mb-3 mt-3">
+                <label for="latitude" class="form-label">Latitude:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="latitude"
+                  name="latitude"
+                  [value]=" listData[index]?.latitude || '' "
+                  disabled
+                >
+              </div>
+              <div class="mb-3">
+                <label for="longitude" class="form-label">Longitude:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="longitude"
+                  name="longitude"
+                  [value]=" listData[index]?.longitude || '' "
+                  disabled
+                >
+              </div>
+              <div class="mb-3">
+                <label for="amount" class="form-label">Amount:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="amount"
+                  name="amount"
+                  [value]=" listData[index]?.amount || 0 "
+                  disabled
+                >
+              </div>
+              <p class="command_line {{this.select_fill_oil_cmd ? 'active' : ''}}" (click)="this.select_fill_oil_cmd = !this.select_fill_oil_cmd">
+                <svg *ngIf="this.select_fill_oil_cmd" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#ffffff"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                Fill Oil
+              </p>
+              <p class="command_line {{this.select_repair_tank_cmd ? 'active' : ''}}" (click)="this.select_repair_tank_cmd = !this.select_repair_tank_cmd">
+                <svg *ngIf="this.select_repair_tank_cmd" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#ffffff"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                Repair Tank
+              </p>
+            </form>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" (click)="onViewDetail()">{{viewDetail === true ? 'Hide' : 'View'}} history </button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="submitCommand()"
+              [disabled]="!(select_fill_oil_cmd || select_repair_tank_cmd)"
+            >Submit</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          </div>
+
+          <div class="detail" *ngIf="viewDetail === true">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th> Type </th>
+                  <th> From/To </th>
+                  <th> Amount </th>
+                  <th> Date </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of logList; let i = index">
+                  <td> {{item.type}} </td>
+                  <td> {{item.from}} </td>
+                  <td> {{item.amount || ''}} </td>
+                  <td> {{changeDateType(item.createdDate)}} </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

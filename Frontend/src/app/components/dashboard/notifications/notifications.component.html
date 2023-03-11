@@ -1,0 +1,10 @@
+<div class="notifications-main">
+  <p class="title">Alerts/Notificatoins</p>
+  <div class="list">
+    <div *ngFor="let item of notify_list; let i = index" class="list-item">
+      <div class="label"> {{ item.tankName }} </div>
+      <div class="value"> {{ item.command }} </div>
+      <div [ngClass]="item.flag ? 'confirm' : 'unconfirm'"> {{item.flag ? 'Confirmed' : 'Unchecked'}} </div>
+    </div>
+  </div>
+</div>

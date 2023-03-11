@@ -1,0 +1,31 @@
+.dashboard-main {
+  .col-sm-4 {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+  .col-sm-3 {
+    padding-left: 50px;
+  }
+  .col-sm-9 {
+    padding-right: 50px;
+  }
+
+  @media (max-width: 1200px) {
+    .col-sm-4 {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    .col-sm-3 {
+      padding-left: 10px;
+    }
+    .col-sm-9 {
+      padding-right: 10px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .row {
+      margin-bottom: 50px;
+    }
+  }
+}

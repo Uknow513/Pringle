@@ -1,0 +1,25 @@
+<div class="overview-main">
+  <p class="title">Overview</p>
+  <div class="list">
+    <div class="list-item" *ngIf="user_email === 'admin'">
+      <p class="label">Assets</p>
+      <p class="value">{{totalAssets}}</p>
+    </div>
+    <div class="list-item" *ngIf="user_email !== 'admin'">
+      <p class="label">Assets</p>
+      <p class="value">{{managerAsset?.amount}}</p>
+    </div>
+    <div class="list-item" *ngIf="user_email === 'admin'">
+      <p class="label">Count</p>
+      <p class="value">{{count}}</p>
+    </div>
+    <div class="list-item" *ngIf="user_email !== 'admin'">
+      <p class="label">Latitude</p>
+      <p class="value">{{managerAsset?.latitude || 0}}</p>
+    </div>
+    <div class="list-item" *ngIf="user_email !== 'admin'">
+      <p class="label">Longitude</p>
+      <p class="value">{{managerAsset?.longitude || 0}}</p>
+    </div>
+  </div>
+</div>

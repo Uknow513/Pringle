@@ -1,0 +1,77 @@
+<div class="header-main">
+  <div class="header-logo">
+    Assets Command / Control Center
+  </div>
+  <div class="dropdown">
+    <div class="avatar dropdown-toggle" data-bs-toggle="dropdown">
+      <img src="/assets/images/avatar.svg" />
+    </div>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePassword">Change Password</a></li>
+      <li><button class="dropdown-item" (click)="onSignOut()">Sign Out</button></li>
+    </ul>
+  </div>
+
+
+  <div class="modal" id="changePassword">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Change Password</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form >
+            <div class="mb-3 mt-3">
+              <label for="old_pwd" class="form-label">Old Password:</label>
+              <input
+                type="password"
+                class="form-control"
+                id="old_pwd"
+                placeholder="Enter New Pasword"
+                name="old_pwd"
+                [value]="oldPwd"
+                (change)="onOldPassword($event)"
+              >
+            </div>
+            <div class="mb-3 mt-3">
+              <label for="new_pwd" class="form-label">New Pasword:</label>
+              <input
+                type="password"
+                class="form-control"
+                id="new_pwd"
+                placeholder="Enter New Pasword"
+                name="new_pwd"
+                [value]="newPwd"
+                (change)="onNewPassword($event)"
+              >
+            </div>
+            <div class="mb-3">
+              <label for="confirm_pwd" class="form-label">Confirm New Password:</label>
+              <input
+                type="password"
+                class="form-control"
+                id="confirm_pwd"
+                placeholder="Retype New Password"
+                name="confirm_pwd"
+                [value]="confirmPwd"
+                (change)="onConfirmPassword($event)"
+              >
+            </div>
+          </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="onChangePassword()">Change</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
